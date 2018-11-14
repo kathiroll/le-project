@@ -53,7 +53,8 @@ class Block{
 
 class Snake{
 	Rectangle r= new Rectangle();
-	int score;
+	
+	//i have deleted le int score
 	
 }
 
