@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -27,18 +28,20 @@ class Block{
 	public Label a;
 	public int posx;
 	public int posy;
+	StackPane p= new StackPane();
 	
 	Block(int w, int xa, int ya){
 		this.weight=w;
 		this.posx=xa;
 		this.posy=ya;
 		this.k= Integer.toString(weight);
-		this.a=new Label(k);
-		this.a.setTextFill(Color.LIME);
+		this.a= new Label(k);
 		this.r.setFill(Color.BLACK);
 		r.setHeight(60);
 		r.setWidth(60);
 		a.setPrefSize(60, 60);
+		a.setStyle("-fx-padding: 0 0 0 20;");
+		this.p.getChildren().addAll(r,a);
 	}
 	
 	Block(int xa, int ya){
@@ -96,8 +99,7 @@ public class gameplay extends Application{
 				// TODO Auto-generated method stub
 				
 				for(int i=0;i<blocklist.size();i++) {
-					blocklist.get(i).r.setLayoutY(blocklist.get(i).r.getLayoutY()+1);
-					blocklist.get(i).a.setLayoutY(blocklist.get(i).a.getLayoutY()+1);
+					blocklist.get(i).p.setLayoutY(blocklist.get(i).p.getLayoutY()+1);
 					
 				}
 				
@@ -106,29 +108,29 @@ public class gameplay extends Application{
 					int weight = 12;
 					//if condition for randomization
 					Block b= new Block(weight ,posx, posy);
-					b.r.setLayoutX(posx);
-					b.r.setLayoutY(posy);
+					b.p.setLayoutX(posx);
+					b.p.setLayoutY(posy);
 					b.r.setFill(Color.BLACK); 
-					b.a.setLayoutX(posx);
-					b.a.setLayoutX(posy);
-					
+					b.a.setTextFill(Color.LIME);
 					
 					//Block b= new Block(weight, posx, posy);
 					//b.r.setLayoutX(posx);
 					//b.r.setLayoutY(posy);
 					//r.setFill(Color.BLACK);
 					
-					root.getChildren().add(b.r);
-					root.getChildren().add(b.a);
+					root.getChildren().add(b.p);
+					//root.getChildren().add(b.a);
 					
 					
 					//boob.add(b.r);
 					blocklist.add(b);
 					posx+=70;
+					//posx1+=20;
 				}
 				posx=10;
-				
+				//posx1=10;
 				posy-=250;
+				//posy2-=250;
 					
 			}
 		};
