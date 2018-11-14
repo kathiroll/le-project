@@ -2,23 +2,20 @@ package snake_block;
 import java.util.ArrayList;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.paint.Color;
-import javafx.scene.control.Label;
-import javafx.scene.text.Text;
-import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.event.EventHandler;
+import javafx.util.Duration;
 
 class Block{
 
@@ -55,8 +52,8 @@ class Block{
 }
 
 class Snake{
-	Rectangle r= new Rectangle();
-	int score;
+	public int length;
+	public Rectangle longboi = new Rectangle();
 	
 }
 
@@ -66,6 +63,9 @@ class Token1{
 
 public class gameplay extends Application{
 	
+	 private static final int      KEYBOARD_MOVEMENT_DELTA = 5;
+	 private static final Duration TRANSLATE_DURATION      = Duration.seconds(0.25);
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -88,6 +88,16 @@ public class gameplay extends Application{
 		
 		arg0.setResizable(false);		
 
+		//adding snake
+	    Snake snake = new Snake();
+	    snake.longboi.setOpacity(0.7);
+	    snake.longboi.setWidth(18);
+	    snake.longboi.setHeight(80);
+	    snake.longboi.setFill(Color.LIME);
+	    root.getChildren().add(snake.longboi);
+	    final TranslateTransition transition = createTranslateTransition(snake.longboi);
+	    moveRectangleOnKeyPress(s, snake.longboi);
+		//
 		
 		AnimationTimer blocksnake=new AnimationTimer() {
 			
@@ -103,8 +113,17 @@ public class gameplay extends Application{
 					
 				}
 				
+				for(int i=0;i<blocklist.size();i++) {
+					if (blocklist.get(i).r.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
+						blocklist.get(i).r.setFill(Color.WHITE);
+						blocklist.get(i).r.setWidth(0);
+						blocklist.get(i).r.setHeight(0);
+						
+						root.getChildren().remove(blocklist.get(i));
+					}
+				}
 				for(int i=0;i<5;i++) {
-
+					if (blocklist.size()<500) {
 					int weight = 12;
 					//if condition for randomization
 					Block b= new Block(weight ,posx, posy);
@@ -126,6 +145,7 @@ public class gameplay extends Application{
 					blocklist.add(b);
 					posx+=70;
 					//posx1+=20;
+					}
 				}
 				posx=10;
 				//posx1=10;
@@ -140,4 +160,43 @@ public class gameplay extends Application{
 		arg0.show();
 	}
 	
+	
+	
+	
+
+	
+	  private TranslateTransition createTranslateTransition(final Rectangle rectangle) {
+		    final TranslateTransition transition = new TranslateTransition(TRANSLATE_DURATION, rectangle);
+		    transition.setOnFinished(new EventHandler<ActionEvent>() {
+		      @Override public void handle(ActionEvent t) {
+		        rectangle.setLayoutX(rectangle.getTranslateX() + rectangle.getX());
+		        rectangle.setLayoutY(rectangle.getTranslateY() + rectangle.getY());
+		        rectangle.setTranslateX(0);
+		        rectangle.setTranslateY(0);
+		      }
+		    });
+		    return transition;
+		  }
+	  
+	  
+	  private void moveRectangleOnKeyPress(Scene scene, final Rectangle rectangle) {
+		  rectangle.setLayoutY(620);
+		  rectangle.setLayoutX(191);
+	    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	      @Override public void handle(KeyEvent event) {
+	        switch (event.getCode()) {
+	         // case UP:    rectangle.setLayoutY(rectangle.getLayoutY() - KEYBOARD_MOVEMENT_DELTA); break;
+	          case RIGHT: 
+	        	  if(rectangle.getLayoutX()<382)
+	        	  rectangle.setLayoutX(rectangle.getLayoutX() + KEYBOARD_MOVEMENT_DELTA); break;
+	         // case DOWN:  rectangle.setLayoutY(rectangle.getLayoutY() + KEYBOARD_MOVEMENT_DELTA); break;
+	          case LEFT:  
+	        	  if(rectangle.getLayoutX()>0)
+	        	  rectangle.setLayoutX(rectangle.getLayoutX() - KEYBOARD_MOVEMENT_DELTA); break;
+	        }
+	      }
+	    });
+	  }
+
 }
+
