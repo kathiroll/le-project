@@ -64,7 +64,7 @@ class Snake{
 	public int length;
 	public Rectangle longboi = new Rectangle();
 	public int score=0;
- 
+	public int magnetactive=-1;
 }
 
 class Token1 extends Token{
@@ -186,9 +186,15 @@ public class gameplay extends Application{
 				for(int i=0;i<blocklist.size();i++) {
 					//block collision
 					if (blocklist.get(i).p.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
-						blocklist.get(i).p.setOpacity(0);
 						
+						//if(blocklist.get(i).weight>=snake.length) {
+						//	gameOver();
+						//}
+						
+						//else {
+						blocklist.get(i).p.setOpacity(0);
 						root.getChildren().remove(blocklist.get(i));
+						//}
 					}
 				}
 				
@@ -197,6 +203,7 @@ public class gameplay extends Application{
 					//token collision
 					if (tokenlist.get(i).c.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
 						snake.score+=tokenlist.get(i).points;
+						System.out.println(snake.score);
 						tokenlist.get(i).c.setOpacity(0);
 						tokenlist.remove(i);
 						//root.getChildren().remove(tokenlist.get(i));
@@ -271,9 +278,9 @@ public class gameplay extends Application{
 	}
 	
 	
-	
-	
-
+		private void gameOver() {
+			
+		}
 	
 	  private TranslateTransition createTranslateTransition(final Rectangle rectangle) {
 		    final TranslateTransition transition = new TranslateTransition(TRANSLATE_DURATION, rectangle);
