@@ -93,7 +93,7 @@ class Ball extends Token{
 	//Image m= new Image("https://www.freepngimg.com/thumb/dollar/1-2-dollar-transparent-thumb.png");
 	
 	Ball(){
-		this.c.setRadius(15);
+		this.c.setRadius(12);
 		//this.c.setFill(new ImagePattern(this.m));
 		this.c.setFill(Color.BLACK);
 		this.points=1;
@@ -106,7 +106,7 @@ class BigBall extends Token{
 	BigBall(){
 		this.c.setRadius(15);
 		//this.c.setFill(new ImagePattern(this.m));
-		this.c.setFill(Color.BLACK);
+		this.c.setFill(Color.LIME);
 		this.points=2;
 	}
 }
@@ -224,7 +224,7 @@ public class gameplay extends Application{
 					Block b= new Block(weight ,posx, posy);
 					b.p.setLayoutX(posx);
 					b.p.setLayoutY(posy);
-					if(k==0||k==1) {
+					if(k==0||k==1||k==2||k==10) {
 						b.r.setFill(Color.BLACK); 
 						b.a.setTextFill(Color.LIME);}
 					else {
@@ -241,6 +241,16 @@ public class gameplay extends Application{
 					//adding balls
 					if(k==1||k==2||k==4||k==11) {
 						Ball b=new Ball();
+						b.c.setLayoutX(posx+41);
+						b.c.setLayoutY(posy+100);
+						
+						root.getChildren().add(b.c);
+					
+						tokenlist.add(b);
+					}
+					
+					if(k==13) {
+						BigBall b=new BigBall();
 						b.c.setLayoutX(posx+41);
 						b.c.setLayoutY(posy+100);
 						
