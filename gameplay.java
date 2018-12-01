@@ -21,6 +21,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+class Token{
+	public Circle c = new Circle();
+	int points;
+}
+
 class Block{
 
 	int weight;
@@ -58,28 +63,51 @@ class Block{
 class Snake{
 	public int length;
 	public Rectangle longboi = new Rectangle();
-	
+	public int score=0;
+ 
 }
 
-class Token1{
-	public Circle c= new Circle();
+class Token1 extends Token{
 	Image m= new Image("https://image.flaticon.com/icons/png/512/223/223558.png");
 	
 	Token1(){
 		this.c.setRadius(15);
 		//this.c.setFill(new ImagePattern(this.m));
 		this.c.setFill(new ImagePattern(m));
+		this.points=0;
 	}
 }
 
-class Ball{
-	public Circle c= new Circle();
+class DestroyShield extends Token{
+	//Image m= new Image("https://image.flaticon.com/icons/png/512/223/223558.png");
+	
+	DestroyShield(){
+		this.c.setRadius(15);
+		//this.c.setFill(new ImagePattern(this.m));
+//		this.c.setFill(new ImagePattern(m));
+		this.points=0;
+	}
+}
+
+class Ball extends Token{
 	//Image m= new Image("https://www.freepngimg.com/thumb/dollar/1-2-dollar-transparent-thumb.png");
 	
 	Ball(){
 		this.c.setRadius(15);
 		//this.c.setFill(new ImagePattern(this.m));
 		this.c.setFill(Color.BLACK);
+		this.points=1;
+	}
+}
+
+class BigBall extends Token{
+	//Image m= new Image("https://www.freepngimg.com/thumb/dollar/1-2-dollar-transparent-thumb.png");
+	
+	BigBall(){
+		this.c.setRadius(15);
+		//this.c.setFill(new ImagePattern(this.m));
+		this.c.setFill(Color.BLACK);
+		this.points=2;
 	}
 }
 
@@ -101,14 +129,10 @@ public class gameplay extends Application{
 		Group root=new Group();
 		root.getChildren().clear();
 		
-		//List of Balls
-		ArrayList<Ball> balllist=new ArrayList<Ball>();
-		//List of Magnets
-		ArrayList<Token1> token1list=new ArrayList<Token1>();
 		//List of Blocks
 		ArrayList<Block> blocklist=new ArrayList<Block>();
-		
-		int score=0;
+		//List of Tokens
+		ArrayList<Token> tokenlist= new ArrayList<Token>();
 		
 		Scene s= new Scene(root,350,700);
 		Canvas c=new Canvas(350,700);
@@ -150,19 +174,12 @@ public class gameplay extends Application{
 					}
 				}
 				
-				for(int i=0;i<token1list.size();i++) {
-					//get magnets to move down
-					token1list.get(i).c.setLayoutY(token1list.get(i).c.getLayoutY()+1);
-					if(token1list.get(i).c.getLayoutY()>900) {
-						token1list.remove(i);
-					}
-				}
-				
-				for(int i=0;i<token1list.size();i++) {
-					//get balls to move down
-					balllist.get(i).c.setLayoutY(balllist.get(i).c.getLayoutY()+1);
-					if(balllist.get(i).c.getLayoutY()>900) {
-						balllist.remove(i);
+				//new stuff
+				for(int i=0;i<tokenlist.size();i++) {
+					//get tokens to move down
+					tokenlist.get(i).c.setLayoutY(tokenlist.get(i).c.getLayoutY()+1);
+					if(tokenlist.get(i).c.getLayoutY()>900) {
+						tokenlist.remove(i);
 					}
 				}
 				
@@ -175,27 +192,21 @@ public class gameplay extends Application{
 					}
 				}
 				
-				for(int i=0;i<token1list.size();i++) {
-					//magnet collision
-					if (token1list.get(i).c.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
-						token1list.get(i).c.setOpacity(0);
-						
-						root.getChildren().remove(token1list.get(i));
-					}
-				}
 				
-				for(int i=0;i<balllist.size();i++) {
-					//ball collision
-					if (balllist.get(i).c.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
-						balllist.get(i).c.setOpacity(0);
+				for(int i=0;i<tokenlist.size();i++) {
+					//token collision
+					if (tokenlist.get(i).c.getBoundsInParent().intersects(snake.longboi.getBoundsInParent())) {
+						snake.score+=tokenlist.get(i).points;
+						tokenlist.get(i).c.setOpacity(0);
+						tokenlist.remove(i);
+						//root.getChildren().remove(tokenlist.get(i));
 						
-						root.getChildren().remove(balllist.get(i));
 					}
 				}
 				
 				for(int i=0;i<5;i++) {
 					
-					if (blocklist.size()<1000 && token1list.size()<500 && balllist.size()<1000) {
+					if (blocklist.size()<1000) {
 					int weight = 12;
 					
 					int k= rand.nextInt(14);
@@ -217,17 +228,18 @@ public class gameplay extends Application{
 					root.getChildren().add(b.p);
 					
 					blocklist.add(b);
+					
 					}
 					
 					//adding balls
-					if(k==1||k==2||k==7||k==8) {
+					if(k==1||k==2||k==4||k==11) {
 						Ball b=new Ball();
 						b.c.setLayoutX(posx+41);
 						b.c.setLayoutY(posy+100);
 						
 						root.getChildren().add(b.c);
 					
-					balllist.add(b);
+						tokenlist.add(b);
 					}
 					
 					//adding magnets
@@ -237,8 +249,8 @@ public class gameplay extends Application{
 						t.c.setLayoutY(posy+130);
 						
 						root.getChildren().add(t.c);
-						
-					token1list.add(t);
+
+						tokenlist.add(t);
 					}
 					posx+=70;
 					//posx1+=20;
